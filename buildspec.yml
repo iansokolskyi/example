@@ -4,7 +4,9 @@ phases:
   pre_build:
     commands:
       - echo Login to Docker Registry
-      - $(aws ecr get-login --no-include-email --region $AWS_REGION)
+#      - $(aws ecr get-login --no-include-email --region $AWS_REGION)
+      - aws ecr get-login-password --region $AWS_REGION
+      - docker login --username AWS --password-stdin 478370635381.dkr.ecr.eu-central-1.amazonaws.com
       - echo Authenticated to registry
       - docker pull $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$APP_NAME:$IMAGE_TAG || true
   build:
