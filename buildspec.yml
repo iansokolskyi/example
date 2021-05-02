@@ -5,22 +5,16 @@ phases:
     commands:
       - echo Login to Docker Registry
       - $(aws ecr get-login --no-include-email --region $AWS_REGION)
-#      - aws ecr get-login-password --region $AWS_REGION
-#      - docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
-      - echo Authenticated to registry
       - docker pull $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$APP_NAME:$IMAGE_TAG || true
   build:
     commands:
       - echo Building docker image
-      - echo Build started on `date`
       - docker build -t $APP_NAME:$IMAGE_TAG --build-arg PORT --build-arg MESSAGE -f Dockerfile .
       - docker tag $APP_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$APP_NAME:$IMAGE_TAG
       - echo Build completed on `date`
       - echo Docker image built and tagged
   post_build:
     commands:
-      - bash -c "if [ /"$CODEBUILD_BUILD_SUCCEEDING/" == /"0/" ]; then exit 1; fi"
-      - echo Tests completed
       - echo Starting post_build stage
       - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$APP_NAME:$IMAGE_TAG
 #      - aws ecs update-service --cluster $FARGATE_CLUSTER --service $SERVICE_NAME --force-new-deployment
