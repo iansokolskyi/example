@@ -6,14 +6,14 @@ phases:
       - echo Login to Docker Registry
 #      - $(aws ecr get-login --no-include-email --region $AWS_REGION)
       - aws ecr get-login-password --region $AWS_REGION
-      - docker login --username AWS --password-stdin 478370635381.dkr.ecr.eu-central-1.amazonaws.com
+      - docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
       - echo Authenticated to registry
       - docker pull $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$APP_NAME:$IMAGE_TAG || true
   build:
     commands:
       - echo Building docker image
       - echo Build started on `date`
-      - docker build --cache-from $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$APP_NAME:$IMAGE_TAG -t $APP_NAME:$IMAGE_TAG --build-arg PORT --build-arg MESSAGE -f Dockerfile .
+      - docker build -t $APP_NAME:$IMAGE_TAG --build-arg PORT --build-arg MESSAGE -f Dockerfile .
       - docker tag $APP_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$APP_NAME:$IMAGE_TAG
       - echo Build completed on `date`
       - echo Docker image built and tagged
