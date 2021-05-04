@@ -7,7 +7,7 @@ const server = http.createServer((req, res) => {
   res.statusCode = 200;
   res.setHeader('Content-Type', 'text/plain');
   res.write(
-    JSON.stringify({message: 'new message', fromEnv: process.env.MESSAGE})
+    JSON.stringify({message: 'some message', fromEnv: process.env.MESSAGE})
   )
   res.end();
 });
