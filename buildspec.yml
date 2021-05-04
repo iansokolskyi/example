@@ -19,4 +19,4 @@ phases:
       - echo Tests completed
       - echo Starting post_build stage
       - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$APP_NAME:$IMAGE_TAG
-#      - aws ecs update-service --cluster $FARGATE_CLUSTER --service $SERVICE_NAME --force-new-deployment
+      - aws ecs update-service --cluster $FARGATE_CLUSTER --service $SERVICE_NAME --force-new-deployment
